@@ -271,13 +271,20 @@
      6. GSAP HERO INTRO + SCROLL REVEALS
      ====================================================================== */
   function animateHeroIn() {
-    if (!window.gsap) return;
-    const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-    tl.from("[data-anim='fade-down']", { y: -24, opacity: 0, duration: 1 })
-      .from(".hero__name", { y: 60, opacity: 0, duration: 1.1, stagger: 0.15 }, "-=0.6")
-      .from(".hero__amp", { scale: 0, opacity: 0, duration: 0.8, ease: "back.out(2)" }, "-=0.9")
-      .from("[data-anim='fade-up']", { y: 24, opacity: 0, duration: 1, stagger: 0.15 }, "-=0.4")
-      .from(".hero__scroll-cue", { opacity: 0, duration: 1 }, "-=0.2");
+    if (!window.gsap) return; // CSS/HTML already renders these fully visible by default
+    const heroEls = $$("[data-anim]");
+    try {
+      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+      tl.from("[data-anim='fade-down']", { y: -24, opacity: 0, duration: 1 })
+        .from(".hero__name", { y: 60, opacity: 0, duration: 1.1, stagger: 0.15 }, "-=0.6")
+        .from(".hero__amp", { scale: 0, opacity: 0, duration: 0.8, ease: "back.out(2)" }, "-=0.9")
+        .from("[data-anim='fade-up']", { y: 24, opacity: 0, duration: 1, stagger: 0.15 }, "-=0.4")
+        .from(".hero__scroll-cue", { opacity: 0, duration: 1 }, "-=0.2");
+    } catch (err) {
+      // If the timeline errors out partway, don't leave hero content stuck at opacity 0.
+      console.error("Hero intro animation failed, showing content immediately:", err);
+      heroEls.forEach((el) => { el.style.opacity = 1; el.style.transform = "none"; });
+    }
   }
 
   function initScrollReveals() {
@@ -609,7 +616,7 @@
      10. COUNTDOWN TIMER
      ====================================================================== */
   function initCountdown() {
-    const targetDate = new Date("2026-09-21T19:00:00");
+    const targetDate = new Date("2027-02-12T19:00:00");
     const els = {
       months: $("#cd-months"), days: $("#cd-days"),
       hours: $("#cd-hours"), minutes: $("#cd-minutes"), seconds: $("#cd-seconds")
@@ -753,17 +760,25 @@
   /* ======================================================================
      INIT — run everything once DOM is ready
      ====================================================================== */
+  // Run each feature independently: if one throws (an unsupported API on a
+  // particular browser, a blocked resource, etc.) the rest — most importantly
+  // initPreloader(), which opens the doors and reveals the hero — still runs.
+  function safeInit(name, fn) {
+    try { fn(); }
+    catch (err) { console.error("Init failed for " + name + ":", err); }
+  }
+
   document.addEventListener("DOMContentLoaded", () => {
-    initCursor();
-    initScrollChrome();
-    initAmbientFX();
-    initSpotlight();
-    initScratchCard();
-    initCountdown();
-    initLightbox();
-    initRSVPForm();
-    initMusicPlayer();
-    initScrollReveals();
-    initPreloader();
+    safeInit("cursor", initCursor);
+    safeInit("scrollChrome", initScrollChrome);
+    safeInit("ambientFX", initAmbientFX);
+    safeInit("spotlight", initSpotlight);
+    safeInit("scratchCard", initScratchCard);
+    safeInit("countdown", initCountdown);
+    safeInit("lightbox", initLightbox);
+    safeInit("rsvpForm", initRSVPForm);
+    safeInit("musicPlayer", initMusicPlayer);
+    safeInit("scrollReveals", initScrollReveals);
+    safeInit("preloader", initPreloader);
   });
 })();
