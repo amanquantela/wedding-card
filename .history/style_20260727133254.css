@@ -308,8 +308,8 @@ body::before{
 
 /* =========================== HERO =========================== */
 .hero{
-  position:relative; min-height:auto; display:flex; align-items:center; justify-content:center;
-  overflow:hidden; padding:120px 20px; text-align:center; z-index:1;
+  position:relative; min-height:100svh; display:flex; align-items:center; justify-content:center;
+  overflow:hidden; padding:2rem 1.5rem; text-align:center; z-index:1;
 }
 .hero__bg{
   position:absolute; inset:0; z-index:-2;
@@ -651,10 +651,4 @@ body::before{
   .gallery{ columns:2 160px; }
   .music-player{ padding:.4rem .6rem .4rem .4rem; }
   .hero__date-pill{ font-size:.68rem; text-align:center; }
-}
-
-[data-anim]{
-    opacity:1 !important;
-    transform:none !important;
-    visibility:visible !important;
 }
