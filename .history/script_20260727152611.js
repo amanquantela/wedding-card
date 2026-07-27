@@ -6,15 +6,13 @@
 (function () {
   "use strict";
 
-  const reduceMotion = window.matchMedia(
-    "(prefers-reduced-motion: reduce)",
-  ).matches;
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (window.gsap && window.ScrollTrigger) gsap.registerPlugin(ScrollTrigger);
 
   /* ======================================================================
      1. UTILITIES
      ====================================================================== */
-  const $ = (sel, ctx = document) => ctx.querySelector(sel);
+  const $  = (sel, ctx = document) => ctx.querySelector(sel);
   const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
   const rand = (min, max) => Math.random() * (max - min) + min;
 
@@ -30,14 +28,10 @@
     const glow = $("#cursorGlow");
     if (!dot || !glow || window.matchMedia("(hover:none)").matches) return;
 
-    let mouseX = 0,
-      mouseY = 0,
-      glowX = 0,
-      glowY = 0;
+    let mouseX = 0, mouseY = 0, glowX = 0, glowY = 0;
 
     window.addEventListener("mousemove", (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
+      mouseX = e.clientX; mouseY = e.clientY;
       dot.style.left = mouseX + "px";
       dot.style.top = mouseY + "px";
     });
@@ -53,17 +47,9 @@
     raf();
 
     // hover states on interactive elements
-    $$(
-      "a, button, .gallery__item, .event-card, .countdown__unit, input, select, textarea",
-    ).forEach((el) => {
-      el.addEventListener("mouseenter", () => {
-        dot.classList.add("hover");
-        glow.classList.add("hover");
-      });
-      el.addEventListener("mouseleave", () => {
-        dot.classList.remove("hover");
-        glow.classList.remove("hover");
-      });
+    $$("a, button, .gallery__item, .event-card, .countdown__unit, input, select, textarea").forEach((el) => {
+      el.addEventListener("mouseenter", () => { dot.classList.add("hover"); glow.classList.add("hover"); });
+      el.addEventListener("mouseleave", () => { dot.classList.remove("hover"); glow.classList.remove("hover"); });
     });
 
     // click ripple
@@ -84,14 +70,11 @@
     const fill = $("#scrollProgress");
     const backBtn = $("#backToTop");
     const dots = $$(".side-nav__dot");
-    const sections = dots
-      .map((d) => document.querySelector(d.getAttribute("href")))
-      .filter(Boolean);
+    const sections = dots.map((d) => document.querySelector(d.getAttribute("href"))).filter(Boolean);
 
     function onScroll() {
       const scrollTop = window.scrollY;
-      const docHeight =
-        document.documentElement.scrollHeight - window.innerHeight;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
       const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
       if (fill) fill.style.width = pct + "%";
 
@@ -100,8 +83,7 @@
       // determine active section
       let currentIndex = 0;
       sections.forEach((sec, i) => {
-        if (sec && sec.getBoundingClientRect().top <= window.innerHeight * 0.4)
-          currentIndex = i;
+        if (sec && sec.getBoundingClientRect().top <= window.innerHeight * 0.4) currentIndex = i;
       });
       dots.forEach((d, i) => d.classList.toggle("active", i === currentIndex));
     }
@@ -110,9 +92,7 @@
     onScroll();
 
     if (backBtn) {
-      backBtn.addEventListener("click", () =>
-        window.scrollTo({ top: 0, behavior: "smooth" }),
-      );
+      backBtn.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
     }
 
     dots.forEach((dot) => {
@@ -146,19 +126,13 @@
       const duration = rand(9, 16);
       const drift = rand(-120, 120);
       if (window.gsap) {
-        gsap.fromTo(
-          el,
+        gsap.fromTo(el,
           { y: -40, x: 0, rotation: 0, opacity: 0 },
           {
-            y: window.innerHeight + 60,
-            x: drift,
-            rotation: rand(180, 540),
-            opacity: rand(0.5, 0.9),
-            duration,
-            ease: "none",
-            onComplete: () => el.remove(),
-          },
-        );
+            y: window.innerHeight + 60, x: drift, rotation: rand(180, 540), opacity: rand(.5, .9),
+            duration, ease: "none",
+            onComplete: () => el.remove()
+          });
         gsap.to(el, { opacity: 0, duration: 1.5, delay: duration - 1.5 });
       } else {
         el.remove();
@@ -174,18 +148,9 @@
       if (window.gsap) {
         const tl = gsap.timeline({ onComplete: () => el.remove() });
         tl.to(el, { opacity: 1, duration: 1 })
-          .to(el, {
-            x: rand(-80, 80),
-            y: rand(-80, 80),
-            duration: rand(3, 5),
-            ease: "sine.inOut",
-            repeat: 1,
-            yoyo: true,
-          })
+          .to(el, { x: rand(-80, 80), y: rand(-80, 80), duration: rand(3, 5), ease: "sine.inOut", repeat: 1, yoyo: true })
           .to(el, { opacity: 0, duration: 1.2 }, "-=1");
-      } else {
-        el.remove();
-      }
+      } else { el.remove(); }
     }
 
     function spawnParticle() {
@@ -198,20 +163,11 @@
       el.style.top = rand(0, 100) + "vh";
       layer.appendChild(el);
       if (window.gsap) {
-        gsap.fromTo(
-          el,
-          { opacity: 0, y: 0 },
-          {
-            opacity: rand(0.3, 0.7),
-            y: -rand(40, 120),
-            duration: rand(4, 8),
-            ease: "sine.inOut",
-            onComplete: () => el.remove(),
-          },
-        );
-      } else {
-        el.remove();
-      }
+        gsap.fromTo(el, { opacity: 0, y: 0 }, {
+          opacity: rand(.3, .7), y: -rand(40, 120), duration: rand(4, 8), ease: "sine.inOut",
+          onComplete: () => el.remove()
+        });
+      } else { el.remove(); }
     }
 
     function spawnDiya() {
@@ -222,16 +178,10 @@
       layer.appendChild(el);
       if (window.gsap) {
         gsap.to(el, {
-          y: -(window.innerHeight + 100),
-          x: rand(-60, 60),
-          opacity: 0,
-          duration: rand(10, 16),
-          ease: "none",
-          onComplete: () => el.remove(),
+          y: -(window.innerHeight + 100), x: rand(-60, 60), opacity: 0, duration: rand(10, 16), ease: "none",
+          onComplete: () => el.remove()
         });
-      } else {
-        el.remove();
-      }
+      } else { el.remove(); }
     }
 
     if (!reduceMotion) {
@@ -269,16 +219,11 @@
         const dist = rand(60, 220);
         if (window.gsap) {
           gsap.to(s, {
-            x: Math.cos(angle) * dist,
-            y: Math.sin(angle) * dist,
-            opacity: 0,
-            duration: rand(0.7, 1.2),
-            ease: "power2.out",
-            onComplete: () => s.remove(),
+            x: Math.cos(angle) * dist, y: Math.sin(angle) * dist,
+            opacity: 0, duration: rand(0.7, 1.2), ease: "power2.out",
+            onComplete: () => s.remove()
           });
-        } else {
-          setTimeout(() => s.remove(), 900);
-        }
+        } else { setTimeout(() => s.remove(), 900); }
       }
     }
 
@@ -294,9 +239,12 @@
       sparkleBurst();
 
       setTimeout(() => {
-        preloader.style.display = "none";
+        preloader.classList.add("fade-out");
+        document.body.style.cursor = "";
+        // reveal hero content with a cinematic entrance
         animateHeroIn();
-      }, 950);
+        setTimeout(() => { preloader.style.display = "none"; }, 950);
+      }, 1500);
     }
 
     palace.addEventListener("click", () => {
@@ -324,57 +272,18 @@
      ====================================================================== */
   function animateHeroIn() {
     if (!window.gsap) return; // CSS/HTML already renders these fully visible by default
-    gsap.set(
-      [
-        ".hero__eyebrow",
-        ".hero__name",
-        ".hero__amp",
-        ".hero__tagline",
-        ".hero__date-pill",
-        ".hero__scroll-cue",
-      ],
-      {
-        clearProps: "all",
-      },
-    );
     const heroEls = $$("[data-anim]");
     try {
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
       tl.from("[data-anim='fade-down']", { y: -24, opacity: 0, duration: 1 })
-        .from(
-          ".hero__name",
-          { y: 60, opacity: 0, duration: 1.1, stagger: 0.15 },
-          "-=0.6",
-        )
-        .from(
-          ".hero__amp",
-          { scale: 0, opacity: 0, duration: 0.8, ease: "back.out(2)" },
-          "-=0.9",
-        )
-        .fromTo(
-          "[data-anim='fade-up']",
-          {
-            y: 24,
-            opacity: 0,
-          },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 1,
-            stagger: 0.15,
-          },
-        )
+        .from(".hero__name", { y: 60, opacity: 0, duration: 1.1, stagger: 0.15 }, "-=0.6")
+        .from(".hero__amp", { scale: 0, opacity: 0, duration: 0.8, ease: "back.out(2)" }, "-=0.9")
+        .from("[data-anim='fade-up']", { y: 24, opacity: 0, duration: 1, stagger: 0.15 }, "-=0.4")
         .from(".hero__scroll-cue", { opacity: 0, duration: 1 }, "-=0.2");
     } catch (err) {
       // If the timeline errors out partway, don't leave hero content stuck at opacity 0.
-      console.error(
-        "Hero intro animation failed, showing content immediately:",
-        err,
-      );
-      heroEls.forEach((el) => {
-        el.style.opacity = 1;
-        el.style.transform = "none";
-      });
+      console.error("Hero intro animation failed, showing content immediately:", err);
+      heroEls.forEach((el) => { el.style.opacity = 1; el.style.transform = "none"; });
     }
   }
 
@@ -386,83 +295,40 @@
     }
 
     $$("[data-reveal]").forEach((el) => {
-      gsap.fromTo(
-        el,
+      gsap.fromTo(el,
         { opacity: 0, y: 40 },
         {
-          opacity: 1,
-          y: 0,
-          duration: 1,
-          ease: "power3.out",
-          scrollTrigger: { trigger: el, start: "top 85%" },
-        },
-      );
+          opacity: 1, y: 0, duration: 1, ease: "power3.out",
+          scrollTrigger: { trigger: el, start: "top 85%" }
+        });
     });
 
     // timeline media parallax-ish scale in
     $$(".timeline__media").forEach((el) => {
-      gsap.fromTo(
-        el,
-        { scale: 1.15, opacity: 0 },
-        {
-          scale: 1,
-          opacity: 1,
-          duration: 1.2,
-          ease: "power2.out",
-          scrollTrigger: { trigger: el, start: "top 85%" },
-        },
-      );
+      gsap.fromTo(el, { scale: 1.15, opacity: 0 }, {
+        scale: 1, opacity: 1, duration: 1.2, ease: "power2.out",
+        scrollTrigger: { trigger: el, start: "top 85%" }
+      });
     });
 
     // event cards stagger
     gsap.utils.toArray(".events-grid .event-card").forEach((card, i) => {
-      gsap.fromTo(
-        card,
-        { opacity: 0, y: 50 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.9,
-          delay: (i % 3) * 0.08,
-          ease: "power3.out",
-          scrollTrigger: { trigger: card, start: "top 88%" },
-        },
-      );
+      gsap.fromTo(card, { opacity: 0, y: 50 }, {
+        opacity: 1, y: 0, duration: 0.9, delay: (i % 3) * 0.08, ease: "power3.out",
+        scrollTrigger: { trigger: card, start: "top 88%" }
+      });
     });
 
     // gentle parallax on section mandalas / hero bg
-    gsap.to(".hero__mandala--1", {
-      y: 80,
-      scrollTrigger: {
-        trigger: ".hero",
-        start: "top top",
-        end: "bottom top",
-        scrub: 1,
-      },
-    });
-    gsap.to(".hero__mandala--2", {
-      y: -60,
-      scrollTrigger: {
-        trigger: ".hero",
-        start: "top top",
-        end: "bottom top",
-        scrub: 1,
-      },
-    });
+    gsap.to(".hero__mandala--1", { y: 80, scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: 1 } });
+    gsap.to(".hero__mandala--2", { y: -60, scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: 1 } });
 
     // gallery parallax
     gsap.utils.toArray(".gallery__item").forEach((img, i) => {
-      gsap.fromTo(
-        img,
-        { y: 50, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 1,
-          ease: "power2.out",
-          scrollTrigger: { trigger: img, start: "top 92%" },
-        },
-      );
+      gsap.fromTo(img, { y: 50, opacity: 0 }, {
+        y: 0, opacity: 1, duration: 1, ease: "power2.out",
+        scrollTrigger: { trigger: img, start: "top 92%" }
+      });
     });
   }
 
@@ -565,8 +431,8 @@
       for (let i = 0; i < 2; i++) {
         const dust = document.createElement("div");
         dust.style.position = "absolute";
-        dust.style.left = rect.left + x + rand(-6, 6) + "px";
-        dust.style.top = rect.top + y + rand(-6, 6) + "px";
+        dust.style.left = (rect.left + x + rand(-6, 6)) + "px";
+        dust.style.top = (rect.top + y + rand(-6, 6)) + "px";
         dust.style.width = rand(2, 4) + "px";
         dust.style.height = dust.style.width;
         dust.style.borderRadius = "50%";
@@ -577,12 +443,8 @@
         document.body.appendChild(dust);
         if (window.gsap) {
           gsap.to(dust, {
-            y: rand(-20, -40),
-            x: rand(-15, 15),
-            opacity: 0,
-            duration: rand(0.5, 0.9),
-            ease: "power1.out",
-            onComplete: () => dust.remove(),
+            y: rand(-20, -40), x: rand(-15, 15), opacity: 0, duration: rand(0.5, 0.9),
+            ease: "power1.out", onComplete: () => dust.remove()
           });
         } else {
           setTimeout(() => dust.remove(), 700);
@@ -614,12 +476,8 @@
       if (hint) hint.style.opacity = "0";
       if (window.gsap) {
         gsap.to(canvas, {
-          opacity: 0,
-          duration: 0.8,
-          ease: "power2.out",
-          onComplete: () => {
-            canvas.style.pointerEvents = "none";
-          },
+          opacity: 0, duration: 0.8, ease: "power2.out",
+          onComplete: () => { canvas.style.pointerEvents = "none"; }
         });
       } else {
         canvas.style.opacity = 0;
@@ -658,9 +516,7 @@
     canvas.addEventListener("touchmove", moveScratch, { passive: false });
     canvas.addEventListener("touchend", endScratch);
 
-    window.addEventListener("resize", () => {
-      if (!revealed) resize();
-    });
+    window.addEventListener("resize", () => { if (!revealed) resize(); });
     resize();
 
     /* ---- optional scratching sound (uses Web Audio API, no external file needed) ---- */
@@ -671,17 +527,11 @@
       if (now - lastSoundTime < 90) return;
       lastSoundTime = now;
       try {
-        audioCtx =
-          audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+        audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
         const bufferSize = audioCtx.sampleRate * 0.04;
-        const buffer = audioCtx.createBuffer(
-          1,
-          bufferSize,
-          audioCtx.sampleRate,
-        );
+        const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
         const data = buffer.getChannelData(0);
-        for (let i = 0; i < bufferSize; i++)
-          data[i] = (Math.random() * 2 - 1) * 0.3;
+        for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * 0.3;
         const noise = audioCtx.createBufferSource();
         noise.buffer = buffer;
         const filter = audioCtx.createBiquadFilter();
@@ -691,14 +541,11 @@
         gainNode.gain.value = 0.15;
         noise.connect(filter).connect(gainNode).connect(audioCtx.destination);
         noise.start();
-      } catch (err) {
-        /* audio not available, fail silently */
-      }
+      } catch (err) { /* audio not available, fail silently */ }
     }
     function playScratchCompleteSound() {
       try {
-        audioCtx =
-          audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+        audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
         const now = audioCtx.currentTime;
         [523.25, 659.25, 783.99].forEach((freq, i) => {
           const osc = audioCtx.createOscillator();
@@ -707,17 +554,12 @@
           osc.type = "sine";
           gainNode.gain.setValueAtTime(0.0001, now + i * 0.12);
           gainNode.gain.linearRampToValueAtTime(0.12, now + i * 0.12 + 0.05);
-          gainNode.gain.exponentialRampToValueAtTime(
-            0.0001,
-            now + i * 0.12 + 0.5,
-          );
+          gainNode.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.12 + 0.5);
           osc.connect(gainNode).connect(audioCtx.destination);
           osc.start(now + i * 0.12);
           osc.stop(now + i * 0.12 + 0.55);
         });
-      } catch (err) {
-        /* fail silently */
-      }
+      } catch (err) { /* fail silently */ }
     }
   }
 
@@ -741,7 +583,7 @@
       speedY: rand(2, 5),
       speedX: rand(-2, 2),
       rotation: rand(0, 360),
-      rotSpeed: rand(-6, 6),
+      rotSpeed: rand(-6, 6)
     }));
 
     let frame = 0;
@@ -776,11 +618,8 @@
   function initCountdown() {
     const targetDate = new Date("2027-02-12T19:00:00");
     const els = {
-      months: $("#cd-months"),
-      days: $("#cd-days"),
-      hours: $("#cd-hours"),
-      minutes: $("#cd-minutes"),
-      seconds: $("#cd-seconds"),
+      months: $("#cd-months"), days: $("#cd-days"),
+      hours: $("#cd-hours"), minutes: $("#cd-minutes"), seconds: $("#cd-seconds")
     };
     if (!els.months) return;
 
@@ -827,9 +666,7 @@
       img.alt = items[currentIndex].alt || "";
       lightbox.classList.add("active");
     }
-    function close() {
-      lightbox.classList.remove("active");
-    }
+    function close() { lightbox.classList.remove("active"); }
     function show(delta) {
       currentIndex = (currentIndex + delta + items.length) % items.length;
       img.src = items[currentIndex].src;
@@ -840,9 +677,7 @@
     closeBtn && closeBtn.addEventListener("click", close);
     prevBtn && prevBtn.addEventListener("click", () => show(-1));
     nextBtn && nextBtn.addEventListener("click", () => show(1));
-    lightbox.addEventListener("click", (e) => {
-      if (e.target === lightbox) close();
-    });
+    lightbox.addEventListener("click", (e) => { if (e.target === lightbox) close(); });
     window.addEventListener("keydown", (e) => {
       if (!lightbox.classList.contains("active")) return;
       if (e.key === "Escape") close();
@@ -892,18 +727,12 @@
     }
 
     function play() {
-      return audio
-        .play()
-        .then(() => {
-          setPlayingUI(true);
-        })
-        .catch((err) => {
-          // Autoplay/file may be blocked or missing — fail gracefully, UI stays on "play".
-          console.info(
-            "Background music didn't start automatically (browser blocked it or the file is missing). Tap the play button to start it manually.",
-            err,
-          );
-        });
+      return audio.play().then(() => {
+        setPlayingUI(true);
+      }).catch((err) => {
+        // Autoplay/file may be blocked or missing — fail gracefully, UI stays on "play".
+        console.info("Background music didn't start automatically (browser blocked it or the file is missing). Tap the play button to start it manually.", err);
+      });
     }
 
     function pause() {
@@ -917,18 +746,14 @@
     });
 
     if (volume) {
-      volume.addEventListener("input", () => {
-        audio.volume = parseFloat(volume.value);
-      });
+      volume.addEventListener("input", () => { audio.volume = parseFloat(volume.value); });
     }
 
     // Expose a minimal API so other interactions (e.g. opening the invitation doors)
     // can start playback using that same click as the required user gesture.
     musicAPI = {
-      playOnGesture() {
-        if (!isPlaying) play();
-      },
-      isPlaying: () => isPlaying,
+      playOnGesture() { if (!isPlaying) play(); },
+      isPlaying: () => isPlaying
     };
   }
 
@@ -939,11 +764,8 @@
   // particular browser, a blocked resource, etc.) the rest — most importantly
   // initPreloader(), which opens the doors and reveals the hero — still runs.
   function safeInit(name, fn) {
-    try {
-      fn();
-    } catch (err) {
-      console.error("Init failed for " + name + ":", err);
-    }
+    try { fn(); }
+    catch (err) { console.error("Init failed for " + name + ":", err); }
   }
 
   document.addEventListener("DOMContentLoaded", () => {

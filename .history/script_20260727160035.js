@@ -294,9 +294,14 @@
       sparkleBurst();
 
       setTimeout(() => {
-        preloader.style.display = "none";
+        preloader.classList.add("fade-out");
+        document.body.style.cursor = "";
+        // reveal hero content with a cinematic entrance
         animateHeroIn();
-      }, 950);
+        setTimeout(() => {
+          preloader.style.display = "none";
+        }, 950);
+      }, 1500);
     }
 
     palace.addEventListener("click", () => {
@@ -351,18 +356,10 @@
           { scale: 0, opacity: 0, duration: 0.8, ease: "back.out(2)" },
           "-=0.9",
         )
-        .fromTo(
+        .from(
           "[data-anim='fade-up']",
-          {
-            y: 24,
-            opacity: 0,
-          },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 1,
-            stagger: 0.15,
-          },
+          { y: 24, opacity: 0, duration: 1, stagger: 0.15 },
+          "-=0.4",
         )
         .from(".hero__scroll-cue", { opacity: 0, duration: 1 }, "-=0.2");
     } catch (err) {
