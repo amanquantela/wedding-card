@@ -357,14 +357,7 @@ body::before{
 .corner-line--inner{ stroke:var(--c-champagne); opacity:.4; }
 .corner-dot{ fill:var(--c-gold-bright); }
 
-/* .hero__content{ position:relative; max-width:760px; } */
-.hero__content{
-    width:100%;
-    max-width:760px;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-}
+.hero__content{ position:relative; max-width:760px; }
 .hero__eyebrow{
   font-family:var(--f-display); font-size:.85rem; letter-spacing:.34em; text-transform:uppercase;
   color:var(--c-champagne); margin-bottom:1.6rem;
