@@ -282,27 +282,49 @@
       }
     }
 
+    // function openInvitation(isUserGesture) {
+    //   if (opened) return;
+    //   opened = true;
+
+    //   // Start audio FIRST, before any other work, so it stays tied as closely as
+    //   // possible to the original click/tap (some browsers are strict about this).
+    //   if (isUserGesture && musicAPI) musicAPI.playOnGesture();
+
+    //   palace.classList.add("is-opening");
+    //   sparkleBurst();
+
+    //   setTimeout(() => {
+    //     preloader.style.display = "none";
+    //     animateHeroIn();
+    //   }, 950);
+    // }
     function openInvitation(isUserGesture) {
       if (opened) return;
       opened = true;
 
-      // Start audio FIRST, before any other work, so it stays tied as closely as
-      // possible to the original click/tap (some browsers are strict about this).
       if (isUserGesture && musicAPI) musicAPI.playOnGesture();
 
       palace.classList.add("is-opening");
       sparkleBurst();
 
       setTimeout(() => {
-        preloader.style.display = "none";
-        animateHeroIn();
-
-        if (!isUserGesture) {
-          showMusicOverlay();
-        }
+        preloader.classList.add("fade-out");
+        setTimeout(() => {
+          preloader.style.display = "none";
+          animateHeroIn();
+        }, 900);
       }, 950);
     }
 
+    function handleTapToOpen(e) {
+      if (opened) return;
+      if (e.type === "touchend" && e.touches && e.touches.length) return;
+      if (musicAPI) musicAPI.playOnGesture();
+      openInvitation(true);
+    }
+
+    preloader.addEventListener("click", handleTapToOpen);
+    preloader.addEventListener("touchend", handleTapToOpen, { passive: true });
     palace.addEventListener("click", () => {
       if (musicAPI) musicAPI.playOnGesture(); // fire immediately, tied directly to this click
       openInvitation(true);
@@ -321,28 +343,6 @@
     }
     document.addEventListener("click", firstInteractionFallback);
     document.addEventListener("touchend", firstInteractionFallback);
-  }
-
-  function showMusicOverlay() {
-    const overlay = document.getElementById("musicOverlay");
-
-    if (!overlay) return;
-
-    overlay.classList.add("show");
-
-    function startMusic() {
-      if (musicAPI) {
-        musicAPI.playOnGesture();
-      }
-
-      overlay.classList.remove("show");
-
-      overlay.removeEventListener("click", startMusic);
-      overlay.removeEventListener("touchstart", startMusic);
-    }
-
-    overlay.addEventListener("click", startMusic);
-    overlay.addEventListener("touchstart", startMusic);
   }
 
   /* ======================================================================

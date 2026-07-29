@@ -675,39 +675,7 @@ body::before{
   .music-player{ padding:.4rem .6rem .4rem .4rem; }
   .hero__date-pill{ font-size:.68rem; text-align:center; }
 }
-
-.music-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(20, 10, 10, 0.75);
-  backdrop-filter: blur(8px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 99999;
-
-  opacity: 0;
-  visibility: hidden;
-  transition: .35s;
-}
-
-.music-overlay.show {
-  opacity: 1;
-  visibility: visible;
-}
-
-.music-overlay__content{
-  text-align:center;
-  color:#fff;
-}
-
-.music-overlay i{
-  font-size:42px;
-  margin-bottom:16px;
-  animation:pulse 1.5s infinite;
-}
-
-@keyframes pulse{
-  0%,100%{transform:scale(1);}
-  50%{transform:scale(1.12);}
+[data-reveal] {
+    opacity: 0;
+    transform: translateY(40px);
 }

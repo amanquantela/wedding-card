@@ -245,6 +245,18 @@
     }
   }
 
+  let hasUserInteracted = false;
+
+  function enableScrollAnimations() {
+    if (hasUserInteracted) return;
+
+    hasUserInteracted = true;
+
+    initScrollReveals();
+
+    ScrollTrigger.refresh();
+  }
+
   /* ======================================================================
      5. PRELOADER — envelope opening sequence
      ====================================================================== */
@@ -286,9 +298,10 @@
       if (opened) return;
       opened = true;
 
-      // Start audio FIRST, before any other work, so it stays tied as closely as
-      // possible to the original click/tap (some browsers are strict about this).
-      if (isUserGesture && musicAPI) musicAPI.playOnGesture();
+      if (isUserGesture) {
+        if (musicAPI) musicAPI.playOnGesture();
+        enableScrollAnimations(); // <-- Add this
+      }
 
       palace.classList.add("is-opening");
       sparkleBurst();
@@ -296,10 +309,6 @@
       setTimeout(() => {
         preloader.style.display = "none";
         animateHeroIn();
-
-        if (!isUserGesture) {
-          showMusicOverlay();
-        }
       }, 950);
     }
 
@@ -321,28 +330,6 @@
     }
     document.addEventListener("click", firstInteractionFallback);
     document.addEventListener("touchend", firstInteractionFallback);
-  }
-
-  function showMusicOverlay() {
-    const overlay = document.getElementById("musicOverlay");
-
-    if (!overlay) return;
-
-    overlay.classList.add("show");
-
-    function startMusic() {
-      if (musicAPI) {
-        musicAPI.playOnGesture();
-      }
-
-      overlay.classList.remove("show");
-
-      overlay.removeEventListener("click", startMusic);
-      overlay.removeEventListener("touchstart", startMusic);
-    }
-
-    overlay.addEventListener("click", startMusic);
-    overlay.addEventListener("touchstart", startMusic);
   }
 
   /* ======================================================================
@@ -982,7 +969,7 @@
     safeInit("lightbox", initLightbox);
     safeInit("rsvpForm", initRSVPForm);
     safeInit("musicPlayer", initMusicPlayer);
-    safeInit("scrollReveals", initScrollReveals);
+    // safeInit("scrollReveals", initScrollReveals);
     safeInit("preloader", initPreloader);
   });
 })();
